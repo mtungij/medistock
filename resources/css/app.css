@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --build-theme: #06b6d4;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@layer components {
+    .erp-surface {
+        @apply rounded-xl border border-slate-200 bg-white shadow-sm transition dark:border-slate-700 dark:bg-slate-900;
+    }
+
+    .erp-surface-hover {
+        @apply hover:border-slate-300 hover:shadow-md dark:hover:border-slate-600;
+    }
+
+    .erp-input {
+        @apply block min-h-11 w-full rounded-lg border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:border-build-orange focus:ring-build-orange disabled:pointer-events-none disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:placeholder:text-slate-500;
+    }
+
+    .erp-label {
+        @apply mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200;
+    }
+
+    .erp-help {
+        @apply mt-1 text-xs text-slate-500 dark:text-slate-400;
+    }
+
+    .erp-error {
+        @apply mt-1 text-xs font-medium text-red-500;
+    }
+
+    .erp-btn-primary {
+        @apply inline-flex items-center justify-center gap-x-2 rounded-lg bg-build-orange px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-build-orange focus:ring-offset-2 focus:ring-offset-white disabled:pointer-events-none disabled:opacity-50 dark:focus:ring-offset-slate-950;
+    }
+
+    .erp-btn-secondary {
+        @apply inline-flex items-center justify-center gap-x-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-build-orange focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800;
+    }
+
+    .badge-success {
+        @apply inline-flex items-center gap-x-1 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300;
+    }
+
+    .badge-warning {
+        @apply inline-flex items-center gap-x-1 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700 dark:bg-amber-500/15 dark:text-amber-300;
+    }
+
+    .badge-info {
+        @apply inline-flex items-center gap-x-1 rounded-full bg-cyan-100 px-2.5 py-1 text-xs font-semibold text-cyan-700 dark:bg-cyan-500/15 dark:text-cyan-300;
+    }
+
+    .badge-danger {
+        @apply inline-flex items-center gap-x-1 rounded-full bg-red-100 px-2.5 py-1 text-xs font-semibold text-red-700 dark:bg-red-500/15 dark:text-red-300;
+    }
+}
+
+@layer utilities {
+    .bg-build-orange,
+    .dark .dark\:bg-build-orange,
+    .file\:bg-build-orange::file-selector-button,
+    .peer:checked ~ .peer-checked\:bg-build-orange {
+        background-color: var(--build-theme) !important;
+    }
+
+    .bg-orange-50,
+    .bg-orange-100,
+    .hover\:bg-orange-50\/40:hover {
+        background-color: color-mix(in srgb, var(--build-theme) 10%, white) !important;
+    }
+
+    .bg-orange-300,
+    .bg-orange-600,
+    .hover\:bg-orange-600:hover {
+        background-color: var(--build-theme) !important;
+    }
+
+    .dark .dark\:bg-orange-500\/10,
+    .dark .dark\:bg-orange-500\/15 {
+        background-color: color-mix(in srgb, var(--build-theme) 16%, transparent) !important;
+    }
+
+    .dark .dark\:hover\:bg-orange-500\/10:hover {
+        background-color: color-mix(in srgb, var(--build-theme) 16%, transparent) !important;
+    }
+
+    .text-build-orange,
+    .text-orange-300,
+    .text-orange-700,
+    .text-orange-800,
+    .dark .dark\:text-orange-200,
+    .dark .dark\:text-orange-300 {
+        color: var(--build-theme) !important;
+    }
+
+    .border-build-orange,
+    .focus\:border-build-orange:focus,
+    .hover\:border-build-orange:hover,
+    .border-orange-200,
+    .border-orange-300,
+    .hover\:border-build-orange\/40:hover {
+        border-color: var(--build-theme) !important;
+    }
+
+    .dark .dark\:border-orange-500\/40,
+    .dark .dark\:border-orange-500\/30 {
+        border-color: color-mix(in srgb, var(--build-theme) 45%, transparent) !important;
+    }
+
+    .ring-build-orange,
+    .focus\:ring-build-orange:focus {
+        --tw-ring-color: var(--build-theme) !important;
+    }
+
+    .ring-build-orange\/20,
+    .focus\:ring-build-orange\/20:focus,
+    .focus\:ring-orange-500\/20:focus {
+        --tw-ring-color: color-mix(in srgb, var(--build-theme) 20%, transparent) !important;
+    }
+
+    .shadow-orange-500\/20,
+    .shadow-orange-500\/25,
+    .shadow-orange-500\/30 {
+        --tw-shadow-color: color-mix(in srgb, var(--build-theme) 28%, transparent) !important;
+        --tw-shadow: var(--tw-shadow-colored) !important;
+    }
+
+    .accent-build-orange {
+        accent-color: var(--build-theme);
+    }
+
+    .hardex-tour-highlight {
+        position: relative !important;
+        z-index: 9991 !important;
+        outline: 3px solid #06b6d4 !important;
+        outline-offset: 4px !important;
+        border-radius: 0.75rem !important;
+        box-shadow: 0 0 0 8px rgb(6 182 212 / 0.18) !important;
+    }
+}

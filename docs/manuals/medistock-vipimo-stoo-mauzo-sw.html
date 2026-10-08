@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="sw">
+<head><meta charset="utf-8"><title>MediStock — Mwongozo wa vipimo, stoo na mauzo</title>
+<style>
+body{font-family:dejavusans,sans-serif;color:#243447;font-size:10pt;line-height:1.35}
+h1{font-size:27pt;color:#0b6663;line-height:1.2;margin:12px 0 20px}h2{font-size:20pt;color:#0b6663;margin:0 0 14px}h3{font-size:13pt;color:#0b6663;margin:18px 0 8px}
+.eyebrow{font-size:10pt;color:#627786;letter-spacing:1px}.lead{font-size:14pt}.box{background:#edf7f6;border-left:4px solid #0b6663;padding:14px;margin:16px 0}.note{background:#fff5df;padding:12px;margin:15px 0}
+table{width:100%;border-collapse:collapse;margin:10px 0}th{background:#0b6663;color:white;text-align:left}td,th{padding:6px;border:1px solid #d4e1e5;vertical-align:top}tr:nth-child(even){background:#f5f8fa}
+li{margin-bottom:6px}.small{font-size:9pt;color:#627786}.formula{font-size:16pt;font-weight:bold;color:#0b6663} .step{font-size:10pt;color:#627786}
+</style></head><body>
+<p class="eyebrow">MEDISTOCK • MWONGOZO WA REJEA • 08 OKTOBA 2026</p>
+<h1>Vipimo, kuingiza stoo<br>na kuuza dawa</h1>
+<p class="lead">Mfano wa kununua kwa box na kuuza kwa kidonge kimoja au box nzima.</p>
+<div class="box"><p class="formula">1 Box = vidonge 100</p><p>Bidhaa ya mfano: <b>Dawa ya Majaribio</b><br>Kipimo cha stoo: <b>Tablet (tab)</b></p></div>
+<h3>Tofauti ya Factor na Quantity</h3>
+<table><tr><th>Kitu</th><th>Maana yake</th><th>Mfano</th></tr>
+<tr><td>Purchase to Stock Factor</td><td>Idadi ya vipimo vya stoo vilivyomo ndani ya kipimo kimoja cha ununuzi.</td><td>100: box moja ina vidonge 100.</td></tr>
+<tr><td>Quantity katika Direct Stock In</td><td>Idadi ya vipimo ulivyopokea kwenye ingizo hilo.</td><td>5: umepokea box 5.</td></tr></table>
+<div class="box"><p class="formula">Box 5 × vidonge 100 = vidonge 500</p><p>Factor inaeleza yaliyomo kwenye box. Quantity inaeleza box ngapi zimeingia.</p></div>
+<h3>Utatumia mwongozo huu kwa hatua nne</h3>
+<ol><li>Sajili bidhaa na vipimo vyake.</li><li>Ongeza Box kama kipimo mbadala cha kununua na kuuza.</li><li>Ingiza stoo kwa kipimo ulichopokea.</li><li>Jaribu mauzo ya kidonge na box, kisha hakiki salio.</li></ol>
+<p class="small">Huu ni mwongozo wa sehemu hizi za MediStock. Majina ya sehemu yanatumia maandishi ya Kiingereza yanayoonekana kwenye fomu. Bei ni za majaribio; tumia bei na idadi halisi kwenye biashara yako.</p>
+<pagebreak />
+<p class="step">HATUA 1 / KUSAJILI BIDHAA</p><h2>Weka vipimo na bei</h2>
+<p>Fungua <b>Products → Create</b> (<b>/products/create</b>). Kwa jaribio linaloanza bila stoo, tumia bidhaa mpya.</p>
+<table><tr><th>Sehemu ya fomu</th><th>Jaza au chagua</th></tr>
+<tr><td>Product Name</td><td>Dawa ya Majaribio</td></tr>
+<tr><td>Category</td><td>Chagua kundi linalofaa kutoka yaliyopo.</td></tr>
+<tr><td>Purchase Unit</td><td>Box (box)</td></tr>
+<tr><td>Base Stock Unit</td><td>Tablet (tab)</td></tr>
+<tr><td>Purchase to Stock Factor</td><td><b>100</b></td></tr>
+<tr><td>Selling Unit</td><td>Tablet (tab)</td></tr>
+<tr><td>Base Unit Pricing — Buying Price</td><td>TZS <b>50</b> kwa kidonge</td></tr>
+<tr><td>Base Unit Pricing — Retail Price</td><td>TZS <b>100</b> kwa kidonge</td></tr></table>
+<p><b>Measurement Type</b> huwekwa kuwa <b>Count</b> kwa chaguo la awali na imefichwa. Kwa mfano huu Selling Unit na Base Stock Unit zote ni Tablet.</p>
+<h3>Ongeza Box katika Unit Conversions &amp; Pricing</h3>
+<p>Bofya <b>Add Alternative Unit</b>, kisha weka:</p>
+<table><tr><th>Sehemu</th><th>Thamani</th></tr>
+<tr><td>Unit</td><td>Box</td></tr><tr><td>Conversion Factor</td><td><b>100</b> — 1 Box = 100 tab</td></tr>
+<tr><td>Purchase / Sell / Active</td><td>Washa zote tatu.</td></tr>
+<tr><td>Purchase Price / Box</td><td>TZS <b>5,000</b></td></tr>
+<tr><td>Retail Price / Box</td><td>TZS <b>10,000</b></td></tr></table>
+<div class="note"><b>Muhimu:</b> Kuweka Purchase Unit kuwa Box pekee hakutoshi kuonyesha mstari wa Box kwenye Direct Stock In. Ongeza Box kama Alternative Unit, kisha washa <b>Purchase</b> na <b>Active</b>. Washa <b>Sell</b> ili Box ipatikane kwenye mauzo.</div>
+<p>Kama unafuatilia expiry, washa <b>Track Expiry Date</b>. Hujazi expiry kwenye kuunda bidhaa. Kwa biashara yenye store, jaza <b>Expiry Date (Month / Year)</b> wakati wa <b>Receive Purchase Order</b>. Kwa biashara isiyo na store, ijaze kwenye <b>Direct Stock In</b>. Tumia mwezi na mwaka, mfano <b>12/2027</b>, bila siku.</p>
+<p>Kamilisha sehemu nyingine zinazohitajika, kisha hifadhi bidhaa.</p>
+<pagebreak />
+<p class="step">HATUA 2 / DIRECT STOCK IN</p><h2>Ingiza ulichopokea</h2>
+<p>Fungua <b>Direct Stock In</b>, chagua bidhaa ya mfano na eneo la stoo linalofaa kama fomu inakuomba. Kwa mfano huu umepokea <b>box 5 tu</b>.</p>
+<table><tr><th>Mstari wa kipimo</th><th>Quantity</th><th>Buying Price kwa kipimo</th></tr>
+<tr><td>Tablet (tab)</td><td>Acha wazi</td><td>Usiingize kiasi hapa.</td></tr>
+<tr><td>Box (box)</td><td><b>5</b></td><td>TZS <b>5,000</b> kwa box</td></tr></table>
+<p>Kwa bidhaa yenye Track Expiry Date, jaza mwezi/mwaka wa mzigo unaopokea. Hakiki muhtasari, kamilisha sehemu zinazohitajika, kisha bofya <b>Save Direct Stock In</b> mara moja.</p>
+<div class="box"><p class="formula">Stoo inaongezeka kwa vidonge 500</p><p>Box 5 × vidonge 100 = vidonge 500<br>Gharama: box 5 × TZS 5,000 = <b>TZS 25,000</b><br>Gharama ya kidonge: TZS 25,000 ÷ 500 = <b>TZS 50</b></p></div>
+<h3>Kwa nini tumejaza Quantity ya Box pekee?</h3>
+<p>Kwa sababu ulipokea box 5. Mfumo unatumia conversion ya 100 kuhesabu vidonge vilivyomo. Huhitaji kuandika vidonge 500 tena.</p>
+<table><tr><th>Ulichopokea</th><th>Unachojaza</th><th>Stoo inayoingia</th></tr>
+<tr><td>Box 5 pekee</td><td>Box = 5; Tablet wazi</td><td><b>500 tab</b></td></tr>
+<tr><td>Vidonge 20 pekee</td><td>Tablet = 20; Box wazi</td><td><b>20 tab</b></td></tr>
+<tr><td>Box 5 pamoja na vidonge 20 vilivyo huru</td><td>Box = 5; Tablet = 20</td><td><b>520 tab</b></td></tr></table>
+<div class="note"><b>Epuka kuhesabu mara mbili:</b> Ukiandika Box = 5 na Tablet = 500 kwa mzigo uleule wa box 5, mfumo utajumlisha 500 + 500 = <b>vidonge 1,000</b>. Hii itaongeza stoo kupita mzigo halisi.</div>
+<p class="small">Mifano kwenye jedwali ni mizigo tofauti. Kwa jaribio la mwongozo huu, hifadhi mfano wa kwanza tu ili uanze mauzo ukiwa na vidonge 500. Ukihifadhi ingizo tena, stoo itaongezeka tena.</p>
+<pagebreak />
+<p class="step">HATUA 3 / MAUZO NA UHAKIKI</p><h2>Uza kidonge au box</h2>
+<p>Fungua <b>POS</b> na chagua bidhaa ya mfano. Hakikisha unatumia eneo lilelile ambalo umeingiza stoo. Jaribio hili linaanza na <b>vidonge 500</b>.</p>
+<h3>Jaribio A — kidonge kimoja</h3>
+<ol><li>Ongeza bidhaa kwenye kikapu.</li><li>Chagua kipimo cha <b>Tablet (tab)</b> na Quantity <b>1</b>.</li><li>Hakiki bei ya rejareja: <b>TZS 100</b>.</li><li>Kamilisha malipo na hifadhi mauzo.</li></ol>
+<div class="box"><b>Salio: 500 − 1 = vidonge 499.</b></div>
+<h3>Jaribio B — box moja</h3>
+<ol><li>Anza mauzo mapya ya bidhaa hiyo.</li><li>Kwenye mstari wa bidhaa, chagua kipimo cha <b>Box</b> badala ya Tablet.</li><li>Weka Quantity <b>1</b>. Hakiki conversion: <b>1 Box = 100 tab</b>.</li><li>Hakiki bei ya rejareja: <b>TZS 10,000</b>, kisha kamilisha malipo na hifadhi.</li></ol>
+<div class="box"><b>Salio: 499 − 100 = vidonge 399.</b><br>Quantity ya mauzo ni box 1; stoo inayopunguzwa ni vidonge 100.</div>
+<h3>Kumbukumbu ya haraka</h3>
+<table><tr><th>Swali</th><th>Jibu</th></tr>
+<tr><td>Box haionekani kwenye Direct Stock In?</td><td>Kagua Alternative Unit ya Box: Purchase na Active viwashwe; hifadhi bidhaa.</td></tr>
+<tr><td>Box haionekani kwenye POS?</td><td>Kagua Alternative Unit ya Box: Sell na Active viwashwe; hifadhi bidhaa.</td></tr>
+<tr><td>Quantity 1 maana yake nini?</td><td>Inategemea kipimo: Tablet 1 ni kidonge 1; Box 1 ni vidonge 100 kwenye mfano huu.</td></tr>
+<tr><td>Box halisi ina vidonge 30?</td><td>Tumia factor 30 katika Purchase to Stock Factor na conversion ya Box. Tumia idadi halisi ya bidhaa hiyo.</td></tr>
+<tr><td>Stoo inaonekana tofauti?</td><td>Kagua eneo la stoo, ingizo lililorudiwa, conversion na mauzo yaliyohifadhiwa.</td></tr></table>
+<p class="small">Rejea: fomu za Products/Create, Unit Conversions &amp; Pricing, Direct Stock In na POS katika mradi wa MediStock uliopo wakati mwongozo huu uliandaliwa.</p>
+</body></html>

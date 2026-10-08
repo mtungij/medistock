@@ -1,0 +1,95 @@
+<?php
+
+namespace App\Models;
+
+use App\Models\Concerns\HasCompany;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+#[Fillable([
+    'branch_id',
+    'company_id',
+    'name',
+    'phone',
+    'email',
+    'address',
+    'region',
+    'district',
+    'customer_type',
+    'credit_limit',
+    'opening_balance',
+    'balance_amount',
+    'status',
+    'whatsapp_debt_reminders_enabled',
+    'is_system_customer',
+    'is_unassigned_credit_customer',
+])]
+class Customer extends Model
+{
+    use HasCompany, HasFactory;
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function sales(): HasMany
+    {
+        return $this->hasMany(Sale::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(CustomerPayment::class);
+    }
+
+    public function portalAccounts(): HasMany
+    {
+        return $this->hasMany(CustomerAccount::class);
+    }
+
+    public function portalReceipts(): HasMany
+    {
+        return $this->hasMany(CustomerReceipt::class);
+    }
+
+    public function deposits(): HasMany
+    {
+        return $this->hasMany(CustomerDeposit::class);
+    }
+
+    public function announcements(): HasMany
+    {
+        return $this->hasMany(AnnouncementCustomer::class);
+    }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(CustomerMessage::class);
+    }
+
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(CustomerNotification::class);
+    }
+
+    public function materialAccounts(): HasMany
+    {
+        return $this->hasMany(CustomerMaterialAccount::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'credit_limit' => 'decimal:2',
+            'opening_balance' => 'decimal:2',
+            'balance_amount' => 'decimal:2',
+            'is_system_customer' => 'boolean',
+            'whatsapp_debt_reminders_enabled' => 'boolean',
+            'is_unassigned_credit_customer' => 'boolean',
+        ];
+    }
+}

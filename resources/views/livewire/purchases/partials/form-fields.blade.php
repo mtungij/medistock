@@ -1,0 +1,132 @@
+<x-card>
+    <form class="space-y-6">
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <label class="block text-sm font-bold text-slate-700 dark:text-slate-200">Supplier
+                <select wire:model.live="supplier_id" wire:change="$refresh" class="mt-1 block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-navy-950">
+                    <option value="">Select supplier</option>
+                    @foreach (\App\Models\Supplier::where('status', 'active')->orderBy('name')->get() as $supplier)
+                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                    @endforeach
+                </select>
+                @error('supplier_id') <span class="text-xs font-semibold text-red-600">{{ $message }}</span> @enderror
+            </label>
+            <label class="block text-sm font-bold text-slate-700 dark:text-slate-200">Branch
+                <select wire:model="branch_id" class="mt-1 block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-navy-950">
+                    @foreach (\App\Models\Branch::where('status', 'active')->orderBy('name')->get() as $branch)
+                        <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                    @endforeach
+                </select>
+            </label>
+            <x-form-input label="Purchase Date" name="purchase_date" type="date" wire:model="purchase_date" required />
+            <x-form-input label="Invoice Number" name="invoice_number" wire:model="invoice_number" />
+            <x-form-input label="Reference Number" name="reference_number" wire:model="reference_number" required />
+            <x-money-input label="Paid Amount" name="paid_amount" value="{{ $paid_amount }}" wire:model.live="paid_amount" required />
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-200 text-sm dark:divide-slate-800">
+                    <thead class="bg-slate-50 text-left text-xs uppercase text-slate-500 dark:bg-white/5"><tr><th class="px-3 py-3">Product</th><th>Purchase Unit</th><th>Ordered Qty</th><th>Supplier Unit Cost</th><th>Selling Price</th><th>Line Total</th><th></th></tr></thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                    @foreach ($items as $index => $item)
+                        @php
+                            $selectedProduct = filled($item['product_id'] ?? null)
+                                ? \App\Models\Product::query()->with(['purchaseUnit.measurementType', 'unit', 'size', 'unitConversions.unit'])->find($item['product_id'])
+                                : null;
+                            $selectedPurchaseUnit = filled($item['purchase_unit_id'] ?? null) ? \App\Models\Unit::find($item['purchase_unit_id']) : null;
+                            $purchaseConversions = $selectedProduct?->unitConversions?->filter(fn ($row) => $row->active && $row->can_purchase && ($row->unit?->status === 'active' || (string) ($item['product_unit_conversion_id'] ?? '') === (string) $row->id)) ?? collect();
+                            $hasLegacyPurchaseUnit = $selectedProduct?->purchase_unit_id
+                                && (int) $selectedProduct->purchase_unit_id !== (int) $selectedProduct->unit_id
+                                && ! $purchaseConversions->contains('unit_id', $selectedProduct->purchase_unit_id);
+                            $sellingPriceValue = filled($item['selling_price'] ?? null)
+                                ? $item['selling_price']
+                                : ($selectedProduct?->selling_price ?? '');
+                        @endphp
+                        <tr>
+                            <td class="px-3 py-3" wire:key="purchase-product-cell-{{ $index }}-{{ $supplier_id ?: 'no-supplier' }}">
+                                <select wire:model.live="items.{{ $index }}.product_id" wire:change="syncProductSellingPrice({{ $index }})" @disabled(blank($supplier_id)) class="w-64 rounded-lg border border-slate-200 bg-white px-3 py-2 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-700 dark:bg-navy-950 dark:disabled:bg-slate-900">
+                                    <option value="">{{ blank($supplier_id) ? 'Select supplier first' : 'Select product' }}</option>
+                                    @if (filled($supplier_id))
+                                        @php
+                                            $historicalProductIds = collect($items)->pluck('product_id')->filter()->map(fn ($id) => (int) $id)->all();
+                                            $purchaseProductsQuery = \App\Models\Product::with(['purchaseUnit', 'unit', 'size'])
+                                                ->where('status', 'active');
+
+                                            if (\App\Support\CompanyFeatures::manufacturingEnabled()) {
+                                                $purchaseProductsQuery->where(fn ($query) => $query
+                                                    ->purchased()
+                                                    ->orWhereIn('id', $historicalProductIds));
+                                            }
+                                        @endphp
+                                        @foreach ($purchaseProductsQuery->orderBy('name')->get() as $product)
+                                            <option value="{{ $product->id }}">{{ $product->displayNameWithSize() }} / Purchase: {{ $product->purchaseUnit?->short_name ?: $product->unit?->short_name }} / {{ $product->sku }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                @if (blank($supplier_id))
+                                    <span class="mt-1 block text-xs font-semibold text-amber-600">Select supplier before choosing products.</span>
+                                @endif
+                            </td>
+                            <td class="px-3 py-3 font-bold">
+                                <select wire:change="selectPurchaseUnit({{ $index }}, $event.target.value)" @disabled(! $selectedProduct) class="w-32 rounded-lg border-slate-200 text-sm disabled:cursor-not-allowed disabled:bg-slate-100 dark:border-slate-700 dark:bg-navy-950">
+                                    @if ($selectedProduct)
+                                        <option value="base" @selected(($item['use_base_unit'] ?? false))>{{ $selectedProduct->unit?->short_name }}</option>
+                                        @if ($hasLegacyPurchaseUnit)
+                                            <option value="configured" @selected(! ($item['use_base_unit'] ?? false) && blank($item['product_unit_conversion_id'] ?? null))>{{ $selectedProduct->purchaseUnit?->short_name }}</option>
+                                        @endif
+                                        @foreach ($purchaseConversions as $conversion)
+                                            <option value="{{ $conversion->id }}" @selected((string) ($item['product_unit_conversion_id'] ?? '') === (string) $conversion->id)>{{ $conversion->unit?->short_name }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="">Chagua bidhaa kwanza</option>
+                                    @endif
+                                </select>
+                                @if ($selectedProduct)
+                                    <span class="mt-1 block text-xs text-slate-500">1 {{ $selectedPurchaseUnit?->short_name }} = {{ \App\Support\NumberFormatter::quantity($item['purchase_conversion_factor'] ?? 1) }} {{ $selectedProduct->unit?->short_name }}</span>
+                                @endif
+                            </td>
+                            <td class="px-3 py-3">
+                                <input wire:model.live="items.{{ $index }}.ordered_quantity" type="number" step="{{ $selectedPurchaseUnit?->measurementType?->code === \App\Models\MeasurementType::COUNT ? '1' : '0.0001' }}" class="w-28 rounded-lg border border-slate-200 px-3 py-2 dark:border-slate-700 dark:bg-navy-950">
+                                @if ($selectedProduct)<span class="mt-1 block text-xs font-semibold text-slate-500">{{ $selectedPurchaseUnit?->short_name ?: $selectedProduct->unit?->short_name }}</span>@endif
+                                @error("items.{$index}.ordered_quantity") <span class="block text-xs font-semibold text-red-600">{{ $message }}</span> @enderror
+                            </td>
+                            <td class="px-3 py-3">
+                                <span data-money-field wire:ignore class="block w-36">
+                                    <input type="text" inputmode="decimal" data-money-display class="w-full rounded-lg border border-slate-200 px-3 py-2 dark:border-slate-700 dark:bg-navy-950">
+                                    <input type="hidden" data-money-value value="{{ $item['cost_price'] ?? '' }}" wire:model.live="items.{{ $index }}.cost_price">
+                                </span>
+                            </td>
+                            <td class="px-3 py-3" wire:key="purchase-selling-price-{{ $index }}-{{ $item['product_id'] ?: 'no-product' }}">
+                                <span data-money-field wire:ignore class="block w-36">
+                                    <input type="text" inputmode="decimal" data-money-display class="w-full rounded-lg border border-slate-200 px-3 py-2 dark:border-slate-700 dark:bg-navy-950">
+                                    <input type="hidden" data-money-value value="{{ $sellingPriceValue }}" wire:model="items.{{ $index }}.selling_price">
+                                </span>
+                            </td>
+                            <td class="px-3 py-3 font-black">TZS {{ \App\Support\NumberFormatter::money(($item['ordered_quantity'] ?? 0) * (float) ($item['cost_price'] ?? 0)) }}</td>
+                            <td class="px-3 py-3"><button type="button" wire:click="removeItem({{ $index }})" class="text-sm font-bold text-red-600">Remove</button></td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <button type="button" wire:click="addItem" @disabled(blank($supplier_id)) class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-black disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700">Add Item</button>
+
+        <label class="block text-sm font-bold text-slate-700 dark:text-slate-200">Notes
+            <textarea wire:model="notes" class="mt-1 block min-h-24 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-navy-950"></textarea>
+        </label>
+
+        @php $total = $this->totalAmount(); @endphp
+        <div class="rounded-xl bg-slate-50 p-4 text-right dark:bg-white/5">
+            <p class="text-sm text-slate-500">Grand Total</p>
+            <p class="text-2xl font-black">TZS {{ \App\Support\NumberFormatter::money($total) }}</p>
+            <p class="text-sm text-slate-500">Balance: TZS {{ \App\Support\NumberFormatter::money(max(0, $total - (float) $paid_amount)) }}</p>
+        </div>
+
+
+        <div class="flex flex-wrap gap-2">
+            <button type="button" wire:click="savePurchase('draft')" class="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-black dark:border-slate-700">Save as Draft</button>
+            <button type="button" wire:click="savePurchase('ordered')" class="rounded-xl bg-build-orange px-4 py-2.5 text-sm font-black text-white">Save as Ordered</button>
+            <a href="{{ route('purchases.index') }}" wire:navigate class="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-black dark:border-slate-700">Cancel</a>
+        </div>
+    </form>
+</x-card>
